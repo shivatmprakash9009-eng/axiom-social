@@ -10,6 +10,7 @@ import { ScreenHeader } from "@/components/ScreenHeader";
 import { StatusPill } from "@/components/StatusPill";
 import { Surface } from "@/components/Surface";
 import { colors, radius } from "@/theme/tokens";
+import { saveLocalDraft } from "@/lib/localDrafts";
 
 type Target = "instagram" | "youtube";
 export default function ComposeScreen() {
@@ -18,14 +19,30 @@ export default function ComposeScreen() {
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const chooseMedia = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images", "videos"], allowsEditing: false, quality: 0.9, videoMaxDuration: 180 });
     if (!result.canceled) { setAsset(result.assets[0] ?? null); setSaved(false); }
   };
-  const saveDraft = () => {
-    setSaved(true);
-    Alert.alert("Draft preview saved", "This prototype keeps draft state in the current session only. Persistent storage will be added with the backend.");
+  const saveDraft = async () => {
+    if (saving) return;
+    setSaving(true);
+    try {
+      await saveLocalDraft({
+        target,
+        title: title.trim(),
+        caption: caption.trim(),
+        mediaName: asset?.fileName ?? null,
+        mediaType: asset?.type === "image" || asset?.type === "video" ? asset.type : null,
+      });
+      setSaved(true);
+      Alert.alert("Draft saved on this device", "Your text and destination are saved between sessions. Media itself is not copied, uploaded, or published; you may need to select it again later.");
+    } catch {
+      Alert.alert("Draft could not be saved", "Check available device storage and, if this is an account workspace, confirm you are signed in.");
+    } finally {
+      setSaving(false);
+    }
   };
   const showPublishBoundary = () => Alert.alert("Publishing not connected", "This build does not have Instagram or YouTube OAuth and server-side publishing enabled yet.");
 
@@ -87,7 +104,7 @@ export default function ComposeScreen() {
         </View>
 
         {saved ? <View style={styles.saved}><Ionicons name="checkmark-circle" size={15} color={colors.success} /><Text style={styles.savedText}>Marked saved in this session.</Text></View> : null}
-        <View style={styles.actions}><View style={{ flex: 1 }}><ActionButton label="Save draft" variant="secondary" onPress={saveDraft}><Ionicons name="bookmark-outline" size={16} color={colors.text} /></ActionButton></View><View style={{ flex: 1 }}><ActionButton label="Continue" onPress={showPublishBoundary}><Ionicons name="arrow-forward" size={16} color={colors.canvas} /></ActionButton></View></View>
+        <View style={styles.actions}><View style={{ flex: 1 }}><ActionButton label={saving ? "Saving…" : "Save draft"} variant="secondary" onPress={saveDraft}><Ionicons name="bookmark-outline" size={16} color={colors.text} /></ActionButton></View><View style={{ flex: 1 }}><ActionButton label="Continue" onPress={showPublishBoundary}><Ionicons name="arrow-forward" size={16} color={colors.canvas} /></ActionButton></View></View>
         <Text style={styles.footer}>No content is uploaded to a social platform from this prototype. Publishing unlocks only after account permissions and a secure backend are configured.</Text>
       </Animated.View>
     </ScrollView>
