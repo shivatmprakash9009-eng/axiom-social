@@ -39,14 +39,14 @@ returns trigger
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $function$
 begin
   insert into public.workspace_members (workspace_id, user_id, role)
   values (new.id, new.created_by, 'owner')
   on conflict (workspace_id, user_id) do nothing;
   return new;
 end;
-$;
+$function$;
 
 create trigger workspaces_add_creator_as_owner
   after insert on public.workspaces
