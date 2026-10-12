@@ -25,10 +25,9 @@ function ConnectAction({ onPress }: { onPress: () => void }) {
 }
 
 export default function HomeScreen() {
-  const openSettings = () => router.push("/settings");
   return (
     <Screen>
-      <ScreenHeader title="Your social, in sync." subtitle="A clearer view of everything that needs your attention." onPressSettings={openSettings} />
+      <ScreenHeader title="Your social, in sync." subtitle="A clearer view of everything that needs your attention."  />
       <Animated.View entering={FadeInDown.delay(70).duration(340)} style={styles.hero}>
         <View style={styles.heroGlow} />
         <View style={styles.heroHead}><View style={styles.liveDot} /><Text style={styles.heroEyebrow}>YOUR AI COMMAND CENTER</Text><View style={{ flex: 1 }} /><Ionicons name="sparkles" size={17} color={colors.gold} /></View>
@@ -39,11 +38,11 @@ export default function HomeScreen() {
       </Animated.View>
       <View style={styles.metrics}><Metric label="In your planner" value="08" detail="Sample items only" icon="calendar-outline" /><Metric label="Needs your eye" value="02" detail="Sample drafts only" icon="checkmark-circle-outline" /></View>
       <View style={styles.section}>
-        <SectionHeading title="Connected accounts" eyebrow="Your channels" action="Manage" onActionPress={openSettings} />
+        <SectionHeading title="Connected accounts" eyebrow="Your channels" action="Manage" onActionPress={() => router.push("/settings")} />
         <Surface style={styles.accounts}>
-          <View style={styles.accountRow}><PlatformMark platform="instagram" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>Instagram</Text><Text style={styles.accountSub}>Professional account</Text></View><ConnectAction onPress={openSettings} /></View>
+          <View style={styles.accountRow}><PlatformMark platform="instagram" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>Instagram</Text><Text style={styles.accountSub}>Professional account</Text></View><ConnectAction onPress={() => router.push("/settings")} /></View>
           <View style={styles.rowDivider} />
-          <View style={styles.accountRow}><PlatformMark platform="youtube" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>YouTube</Text><Text style={styles.accountSub}>Channel management</Text></View><ConnectAction onPress={openSettings} /></View>
+          <View style={styles.accountRow}><PlatformMark platform="youtube" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>YouTube</Text><Text style={styles.accountSub}>Channel management</Text></View><ConnectAction onPress={() => router.push("/settings")} /></View>
           <Text style={styles.demoNote}>Not connected. OAuth is not configured yet; no account data is being accessed.</Text>
         </Surface>
       </View>
