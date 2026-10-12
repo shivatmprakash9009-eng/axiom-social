@@ -53,6 +53,7 @@ export default function ComposeScreen() {
         mediaName: asset?.fileName ?? null,
         mediaType: asset?.type === "image" || asset?.type === "video" ? asset.type : null,
       });
+      setLatestDraft(draft);
       setSaved(true);
       Alert.alert("Draft saved on this device", "Your text and destination are saved between sessions. Media itself is not copied, uploaded, or published; you may need to select it again later.");
     } catch {
