@@ -92,6 +92,4 @@ const styles = StyleSheet.create({
   safeguardSub: { color: colors.textMuted, fontSize: 10, lineHeight: 16 },
   signOutButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, padding: 14, borderRadius: 13, borderWidth: 1, borderColor: "rgba(229,139,139,0.25)", backgroundColor: "rgba(229,139,139,0.06)" },
   signOutText: { color: colors.danger, fontSize: 12, fontWeight: "700" },
-  signOutButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, padding: 14, borderRadius: 13, borderWidth: 1, borderColor: "rgba(229,139,139,0.25)", backgroundColor: "rgba(229,139,139,0.06)" },
-  signOutText: { color: colors.danger, fontSize: 12, fontWeight: "700" },
 });
