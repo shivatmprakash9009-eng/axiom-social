@@ -1,0 +1,85 @@
+name: Android APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "mobile/**"
+      - ".github/workflows/android-apk.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-apk-main
+  cancel-in-progress: true
+
+jobs:
+  build-apk:
+    name: Build installable Android preview APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.4"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build tools
+        run: sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install JavaScript dependencies
+        working-directory: mobile
+        run: npm install --no-audit --no-fund
+
+      - name: Verify Expo dependency compatibility
+        working-directory: mobile
+        run: npx expo install --check
+
+      - name: Generate native Android project
+        working-directory: mobile
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Build installable debug APK
+        working-directory: mobile/android
+        run: chmod +x gradlew && ./gradlew --no-daemon assembleDebug
+
+      - name: Stage APK
+        run: |
+          mkdir -p release-apk
+          cp mobile/android/app/build/outputs/apk/debug/app-debug.apk release-apk/axiom-social-debug.apk
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: axiom-social-android-apk
+          path: release-apk/axiom-social-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish latest preview APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: mobile-apk
+          name: AXIOM Social — Latest Android Preview
+          body: |
+            Installable Android debug APK built from the latest successful main-branch workflow.
+
+            This is a development preview of the current AXIOM Social mobile scaffold. Social account OAuth, AI backend, persistent storage, scheduling, and live publishing are not yet implemented. This APK is not a production release.
+          prerelease: true
+          make_latest: false
+          files: release-apk/axiom-social-debug.apk
+          overwrite_files: true
