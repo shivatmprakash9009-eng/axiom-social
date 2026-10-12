@@ -69,7 +69,7 @@ The verified codebase gap analysis, recommended architecture, provider API feasi
 
 ## Secure foundation status
 
-The `feat/secure-foundation` work introduces staged Supabase migrations for profiles, workspaces, workspace memberships, content drafts and append-only audit events; row-level security policies; a secure mobile auth client scaffold; and database/security regression tests. It is not production-connected until a Supabase project is configured and migrations plus authenticated-user isolation tests pass against that project. No Instagram, YouTube, AI, publishing, or billing connector is live.
+The `feat/secure-foundation` work introduces staged Supabase migrations for profiles, workspaces, workspace memberships, content drafts and append-only audit events; row-level security policies; a secure mobile auth client, sign-in/sign-up screen and configured-beta session gate; typed backend contracts; fail-closed provider capability flags; and database/security regression tests. It is not production-connected until a Supabase project is configured and migrations plus authenticated-user isolation tests pass against that project. No Instagram, YouTube, AI, publishing, or billing connector is live.
 
 Use separate Supabase projects for local development, beta/staging and production. Only the Supabase publishable key and project URL belong in the mobile environment. Service-role keys and provider secrets must stay server-side.
 
