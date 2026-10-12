@@ -61,6 +61,10 @@ export default function SettingsScreen() {
         <Surface style={styles.safeguard}><Ionicons name="lock-closed-outline" size={19} color={colors.gold} /><View style={styles.safeguardCopy}><Text style={styles.safeguardTitle}>Credentials stay server-side</Text><Text style={styles.safeguardSub}>Social access tokens and provider secrets will never be stored in the mobile bundle.</Text></View></Surface>
         <Surface style={styles.safeguard}><Ionicons name="receipt-outline" size={19} color={colors.gold} /><View style={styles.safeguardCopy}><Text style={styles.safeguardTitle}>Action history</Text><Text style={styles.safeguardSub}>Production runs will record approval, execution status, result and safe error details.</Text></View></Surface>
       </View>
+      {authConfigured ? <View style={styles.section}>
+        <SectionHeading title="Account" eyebrow="Session controls" />
+        <Pressable accessibilityRole="button" onPress={confirmSignOut} style={styles.signOutButton}><Ionicons name="log-out-outline" size={17} color={colors.danger} /><Text style={styles.signOutText}>Sign out securely</Text></Pressable>
+      </View> : null}
     </Screen>
   );
 }
@@ -85,5 +89,7 @@ const styles = StyleSheet.create({
   safeguard: { flexDirection: "row", alignItems: "flex-start", gap: 11, padding: 14 },
   safeguardCopy: { flex: 1, gap: 4 },
   safeguardTitle: { color: colors.text, fontSize: 12, fontWeight: "600" },
-  safeguardSub: { color: colors.textMuted, fontSize: 10, lineHeight: 16 },\n  signOutButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, padding: 14, borderRadius: 13, borderWidth: 1, borderColor: "rgba(229,139,139,0.25)", backgroundColor: "rgba(229,139,139,0.06)" },\n  signOutText: { color: colors.danger, fontSize: 12, fontWeight: "700" },
+  safeguardSub: { color: colors.textMuted, fontSize: 10, lineHeight: 16 },
+  signOutButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, padding: 14, borderRadius: 13, borderWidth: 1, borderColor: "rgba(229,139,139,0.25)", backgroundColor: "rgba(229,139,139,0.06)" },
+  signOutText: { color: colors.danger, fontSize: 12, fontWeight: "700" },\n  signOutButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, padding: 14, borderRadius: 13, borderWidth: 1, borderColor: "rgba(229,139,139,0.25)", backgroundColor: "rgba(229,139,139,0.06)" },\n  signOutText: { color: colors.danger, fontSize: 12, fontWeight: "700" },
 });
