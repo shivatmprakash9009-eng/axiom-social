@@ -4,6 +4,16 @@
 
 AXIOM Social is designed to help users connect eligible social accounts, plan content, create and edit drafts, schedule publishing workflows, review engagement, and understand execution status from one premium mobile workspace.
 
+## Download the Android app
+
+### [Download the latest AXIOM Social APK](https://github.com/shivatmprakash9009-eng/axiom-social/releases/download/mobile-apk/axiom-social-debug.apk)
+
+The link points to the APK published by the Android build workflow. If a build has not completed successfully yet, open [Latest Android Preview Release](https://github.com/shivatmprakash9009-eng/axiom-social/releases/tag/mobile-apk) and check the release assets.
+
+**Install:** download the APK on your Android phone, open the file, allow installation from that source if Android asks, and tap Install.
+
+**Important:** this is currently an installable development preview. The app UI and local media selection are included, but Instagram/YouTube OAuth, live AI, cloud-saved drafts, background scheduling and real publishing are not implemented yet. Do not treat sample dashboard numbers or sample posts as real account data.
+
 ## Product direction
 
 - **Mobile first:** Android and iOS using React Native, Expo and TypeScript.
@@ -29,6 +39,9 @@ axiom-social/
 │   ├── architecture.md
 │   ├── integration-capabilities.md
 │   └── acceptance-criteria.md
+├── .github/workflows/
+│   ├── mobile-check.yml
+│   └── android-apk.yml
 └── mobile/
     ├── app/
     ├── src/
@@ -37,9 +50,9 @@ axiom-social/
     └── tsconfig.json
 ```
 
-## Getting started
+## Build and run from source
 
-Requirements: Node.js supported by the selected Expo SDK, npm, and Expo Go or an Android/iOS development build.
+Requirements: Node.js 20.19.4, npm, and Android tooling for native builds.
 
 ```bash
 cd mobile
@@ -48,22 +61,11 @@ npx expo install --check
 npx expo start
 ```
 
-Use the QR code in Expo Go where compatible, or launch an emulator/device with the appropriate development setup.
+The GitHub Actions workflow generates the native Android project, builds an installable debug APK, and publishes it to the stable preview-release link above when the workflow succeeds. You can also download the workflow artifact from the [Actions tab](https://github.com/shivatmprakash9009-eng/axiom-social/actions).
 
 ## Current status
 
-**Scaffold in progress.** The repository is initialized for a clean mobile codebase. Social OAuth, AI provider wiring, persistent backend, real publishing, and analytics are not yet active. Do not use sample dashboard data as actual account activity.
-
-## Delivery plan
-
-- Days 1–3: scope and API access verification.
-- Days 4–7: mobile foundation and design system.
-- Days 8–14: assistant/content workflow and first verified connector.
-- Days 15–21: second connector, planner, approvals and recovery.
-- Days 22–26: device QA, security and regression testing.
-- Days 27–30: acceptance, fixes and handover.
-
-Actual integration delivery depends on the client's developer accounts, API permissions, app review and turnaround time.
+**Mobile scaffold in progress.** The repository contains the UI foundation, local media composer, settings screens, architecture documentation, acceptance criteria, and APK build workflow. Social OAuth, AI provider wiring, persistent backend, real publishing, and analytics are not yet active.
 
 ## Security principles
 
