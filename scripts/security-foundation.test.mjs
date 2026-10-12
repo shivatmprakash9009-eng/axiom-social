@@ -42,3 +42,18 @@ test('no provider credentials or service-role secret is introduced into public c
 test('no migration creates a client-readable social token table', () => {
   assert.doesNotMatch(allSql, /create table public\.(social_tokens|provider_tokens|oauth_tokens)/i);
 });
+
+test('provider capabilities fail closed until authorized verification evidence exists', () => {
+  const capabilities = readFileSync(new URL('../mobile/src/lib/capabilities.ts', import.meta.url), 'utf8');
+  assert.match(capabilities, /state: 'unavailable'/);
+  assert.match(capabilities, /return state === 'verified'/);
+  assert.match(capabilities, /canExposeProviderAsLive/);
+  assert.match(capabilities, /testAccountReference/);
+  assert.match(capabilities, /testRunUrl/);
+});
+
+test('typed backend contracts enumerate authorization roles and stable API error codes', () => {
+  const contracts = readFileSync(new URL('../mobile/src/types/backend.ts', import.meta.url), 'utf8');
+  for (const role of ['owner', 'admin', 'editor', 'analyst', 'viewer']) assert.ok(contracts.includes(`'${role}'`));
+  for (const code of ['UNAUTHENTICATED', 'FORBIDDEN', 'VALIDATION_ERROR', 'RATE_LIMITED', 'UPSTREAM_UNAVAILABLE']) assert.ok(contracts.includes(`'${code}'`));
+});
