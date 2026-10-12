@@ -42,7 +42,7 @@ export default function HomeScreen() {
         <Surface style={styles.accounts}>
           <View style={styles.accountRow}><PlatformMark platform="instagram" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>Instagram</Text><Text style={styles.accountSub}>Professional account</Text></View><ConnectAction onPress={() => router.push("/settings")} /></View>
           <View style={styles.rowDivider} />
-          <View style={styles.accountRow}><PlatformMark platform="youtube" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>YouTube</Text><Text style={styles.accountSub}>Channel management</Text></View><ConnectAction onPress={openSettings} /></View>
+          <View style={styles.accountRow}><PlatformMark platform="youtube" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>YouTube</Text><Text style={styles.accountSub}>Channel management</Text></View><ConnectAction onPress={() => router.push("/settings")} /></View>
           <Text style={styles.demoNote}>Not connected. OAuth is not configured yet; no account data is being accessed.</Text>
         </Surface>
       </View>
