@@ -16,7 +16,7 @@ function Connection({ platform, subtitle }: { platform: "instagram" | "youtube";
     <Surface style={styles.connection}>
       <PlatformMark platform={platform} size={43} />
       <View style={styles.connectionCopy}><Text style={styles.connectionTitle}>{name}</Text><Text style={styles.connectionSub}>{subtitle}</Text><StatusPill label="Not connected" tone="neutral" /></View>
-      <Pressable accessibilityRole="button" onPress={() => Alert.alert("Connection not configured", `The secure ${name} OAuth flow and backend token storage are not connected in this scaffold.`)} style={styles.connectButton}><Text style={styles.connectText}>Connect</Text><Ionicons name="arrow-up-right" size={14} color={colors.gold} /></Pressable>
+      <Pressable accessibilityRole="button" onPress={() => Alert.alert("Connection not configured", `The secure ${name} OAuth flow and backend token storage are not connected in this scaffold.`)} style={styles.connectButton}><Text style={styles.connectText}>Connect</Text><Ionicons name="open-outline" size={14} color={colors.gold} /></Pressable>
     </Surface>
   );
 }
