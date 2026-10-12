@@ -57,3 +57,10 @@ test('typed backend contracts enumerate authorization roles and stable API error
   for (const role of ['owner', 'admin', 'editor', 'analyst', 'viewer']) assert.ok(contracts.includes(`'${role}'`));
   for (const code of ['UNAUTHENTICATED', 'FORBIDDEN', 'VALIDATION_ERROR', 'RATE_LIMITED', 'UPSTREAM_UNAVAILABLE']) assert.ok(contracts.includes(`'${code}'`));
 });
+
+test('migration files contain no escaped newline sequences from generated SQL edits', () => {
+  for (const file of migrationFiles) {
+    const sql = readFileSync(new URL(file, migrationDir), 'utf8');
+    assert.doesNotMatch(sql, /\\\\nrevoke execute/i, `${file} must contain real line breaks`);
+  }
+});
