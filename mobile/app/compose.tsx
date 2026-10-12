@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -10,7 +10,7 @@ import { ScreenHeader } from "@/components/ScreenHeader";
 import { StatusPill } from "@/components/StatusPill";
 import { Surface } from "@/components/Surface";
 import { colors, radius } from "@/theme/tokens";
-import { saveLocalDraft } from "@/lib/localDrafts";
+import { loadLatestLocalDraft, saveLocalDraft, type LocalDraft } from "@/lib/localDrafts";
 
 type Target = "instagram" | "youtube";
 export default function ComposeScreen() {
@@ -20,6 +20,23 @@ export default function ComposeScreen() {
   const [caption, setCaption] = useState("");
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [latestDraft, setLatestDraft] = useState<LocalDraft | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void loadLatestLocalDraft().then((draft) => { if (active) setLatestDraft(draft); }).catch(() => undefined);
+    return () => { active = false; };
+  }, []);
+
+  const restoreLatestDraft = () => {
+    if (!latestDraft) return;
+    setTarget(latestDraft.target);
+    setTitle(latestDraft.title);
+    setCaption(latestDraft.caption);
+    setAsset(null);
+    setSaved(true);
+    Alert.alert("Draft restored", "Text and destination are restored. Re-select the media file if the draft used one.");
+  };
 
   const chooseMedia = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images", "videos"], allowsEditing: false, quality: 0.9, videoMaxDuration: 180 });
@@ -29,7 +46,7 @@ export default function ComposeScreen() {
     if (saving) return;
     setSaving(true);
     try {
-      await saveLocalDraft({
+      const draft = await saveLocalDraft({
         target,
         title: title.trim(),
         caption: caption.trim(),
@@ -103,7 +120,7 @@ export default function ComposeScreen() {
           </Surface>
         </View>
 
-        {saved ? <View style={styles.saved}><Ionicons name="checkmark-circle" size={15} color={colors.success} /><Text style={styles.savedText}>Marked saved in this session.</Text></View> : null}
+        {saved ? <View style={styles.saved}><Ionicons name="checkmark-circle" size={15} color={colors.success} /><Text style={styles.savedText}>Saved on this device.</Text></View> : null}\n        {latestDraft ? <Pressable accessibilityRole="button" onPress={restoreLatestDraft} style={styles.restoreDraft}><Ionicons name="refresh-outline" size={14} color={colors.gold} /><Text style={styles.restoreDraftText}>Restore latest saved draft</Text><Text style={styles.restoreDraftDate}>{new Date(latestDraft.updatedAt).toLocaleDateString()}</Text></Pressable> : null}
         <View style={styles.actions}><View style={{ flex: 1 }}><ActionButton label={saving ? "Saving…" : "Save draft"} variant="secondary" onPress={saveDraft}><Ionicons name="bookmark-outline" size={16} color={colors.text} /></ActionButton></View><View style={{ flex: 1 }}><ActionButton label="Continue" onPress={showPublishBoundary}><Ionicons name="arrow-forward" size={16} color={colors.canvas} /></ActionButton></View></View>
         <Text style={styles.footer}>No content is uploaded to a social platform from this prototype. Publishing unlocks only after account permissions and a secure backend are configured.</Text>
       </Animated.View>
@@ -152,7 +169,7 @@ const styles = StyleSheet.create({
   validationText: { flex: 1, color: colors.textSecondary, fontSize: 11 },
   validationState: { color: colors.textMuted, fontSize: 10 },
   saved: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 10 },
-  savedText: { color: colors.success, fontSize: 11 },
+  savedText: { color: colors.success, fontSize: 11 },\n  restoreDraft: { flexDirection: "row", alignItems: "center", gap: 7, paddingVertical: 10, paddingHorizontal: 12, borderRadius: radius.control, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },\n  restoreDraftText: { flex: 1, color: colors.textSecondary, fontSize: 11, fontWeight: "600" },\n  restoreDraftDate: { color: colors.textMuted, fontSize: 10 },
   actions: { flexDirection: "row", alignItems: "center", gap: 10 },
   footer: { color: colors.textMuted, textAlign: "center", fontSize: 10, lineHeight: 16, marginTop: 3 },
 });
