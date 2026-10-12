@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { Pressable, type PressableProps, type ViewStyle } from "react-native";
+import { Pressable, type PressableProps, type StyleProp, type ViewStyle } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { motion } from "@/theme/tokens";
 
-type Props = Omit<PressableProps, "style"> & { style?: ViewStyle; haptic?: boolean };
+type Props = Omit<PressableProps, "style"> & { style?: StyleProp<ViewStyle>; haptic?: boolean };
 export function PressScale({ children, style, onPress, haptic = false, disabled, ...props }: Props) {
   const scale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
