@@ -88,7 +88,7 @@ export default function ComposeScreen() {
             {asset?.uri ? (
               <View style={styles.previewWrap}>
                 {asset.type === "image" ? <Image source={{ uri: asset.uri }} style={styles.preview} resizeMode="cover" /> : <View style={styles.videoPreview}><Ionicons name="videocam" size={35} color={colors.gold} /><Text style={styles.videoText}>{asset.fileName ?? "Selected video"}</Text><Text style={styles.videoMeta}>{asset.duration ? Math.round(asset.duration / 1000) + " seconds" : "Video selected"}</Text></View>}
-                <Pressable accessibilityRole="button" onPress={chooseMedia}><Text style={styles.changeMedia}>Change media</Text></Pressable>
+                <View style={styles.mediaActions}><Pressable accessibilityRole="button" onPress={chooseMedia}><Text style={styles.changeMedia}>Change media</Text></Pressable><Pressable accessibilityRole="button" onPress={() => router.push("/editor")}><Text style={styles.changeMedia}>Open editor</Text></Pressable></View>
               </View>
             ) : (
               <View style={styles.mediaEmpty}>
@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
   videoPreview: { height: 190, width: "100%", gap: 7, alignItems: "center", justifyContent: "center", backgroundColor: colors.surfaceRaised },
   videoText: { color: colors.text, fontSize: 12, fontWeight: "600", maxWidth: 270 },
   videoMeta: { color: colors.textMuted, fontSize: 10 },
+  mediaActions: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 18 },
   changeMedia: { color: colors.gold, fontSize: 11, fontWeight: "700", padding: 4 },
   fieldCard: { padding: 14, gap: 8 },
   fieldLabel: { color: colors.textMuted, fontSize: 9, fontWeight: "800", letterSpacing: 1.2 },

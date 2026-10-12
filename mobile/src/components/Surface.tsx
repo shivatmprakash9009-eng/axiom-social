@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from "react";
-import { StyleSheet, View, type ViewStyle } from "react-native";
+import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { colors, radius } from "@/theme/tokens";
 
-type Props = PropsWithChildren<{ style?: ViewStyle; elevated?: boolean }>;
+type Props = PropsWithChildren<{ style?: StyleProp<ViewStyle>; elevated?: boolean }>;
 export function Surface({ children, style, elevated = false }: Props) {
   return <View style={[styles.surface, elevated && styles.elevated, style]}>{children}</View>;
 }
