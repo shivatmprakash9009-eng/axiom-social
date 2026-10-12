@@ -8,7 +8,7 @@ export function ScreenHeader({ label = "AXIOM SOCIAL", title, subtitle, onPressS
   return <View style={styles.wrap}>
     <View style={styles.top}>
       <View style={styles.brand}><View style={styles.symbol}><Ionicons name="aperture" size={19} color={colors.gold}/></View><Text style={styles.brandName}>{label}</Text></View>
-      <View style={styles.actions}>
+      <View style={styles.actions}><Pressable accessibilityRole="button" accessibilityLabel="Search AXIOM" onPress={()=>router.push("/search")} style={styles.settings}><Ionicons name="search-outline" size={18} color={colors.textSecondary}/></Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel="Notifications" onPress={()=>router.push("/notifications")} style={styles.settings}><Ionicons name="notifications-outline" size={18} color={colors.textSecondary}/></Pressable>
         {onPressSettings ? <Pressable accessibilityRole="button" accessibilityLabel="Open settings" onPress={onPressSettings} style={styles.settings}><Ionicons name="options-outline" size={19} color={colors.textSecondary}/></Pressable> : <Pressable accessibilityRole="button" accessibilityLabel="Open navigation drawer" onPress={()=>router.push("/drawer")} style={styles.settings}><Ionicons name="menu" size={21} color={colors.textSecondary}/></Pressable>}
       </View>
