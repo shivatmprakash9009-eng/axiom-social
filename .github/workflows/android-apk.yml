@@ -58,20 +58,20 @@ jobs:
         working-directory: mobile
         run: npx expo prebuild --platform android --no-install
 
-      - name: Build installable debug APK
+      - name: Build installable release APK with bundled JavaScript
         working-directory: mobile/android
-        run: chmod +x gradlew && ./gradlew --no-daemon assembleDebug
+        run: chmod +x gradlew && ./gradlew --no-daemon assembleRelease
 
       - name: Stage APK
         run: |
           mkdir -p release-apk
-          cp mobile/android/app/build/outputs/apk/debug/app-debug.apk release-apk/axiom-social-debug.apk
+          cp mobile/android/app/build/outputs/apk/release/app-release.apk release-apk/axiom-social.apk
 
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: axiom-social-android-apk
-          path: release-apk/axiom-social-debug.apk
+          path: release-apk/axiom-social.apk
           if-no-files-found: error
           retention-days: 30
 
@@ -81,10 +81,10 @@ jobs:
           tag_name: mobile-apk
           name: AXIOM Social — Latest Android Preview
           body: |
-            Installable Android debug APK built from the latest successful main-branch workflow.
+            Installable Android release APK built from the latest successful main-branch workflow. JavaScript is bundled into the APK, so Metro is not required.
 
             This is a development preview of the current AXIOM Social mobile scaffold. Social account OAuth, AI backend, persistent storage, scheduling, and live publishing are not yet implemented. This APK is not a production release.
           prerelease: true
           make_latest: false
-          files: release-apk/axiom-social-debug.apk
+          files: release-apk/axiom-social.apk
           overwrite_files: true
