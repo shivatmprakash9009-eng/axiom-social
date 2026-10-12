@@ -1,0 +1,37 @@
+name: Security foundation
+
+on:
+  push:
+    paths:
+      - "supabase/**"
+      - "mobile/src/lib/**"
+      - "mobile/package.json"
+      - "mobile/.env.example"
+      - ".github/workflows/security-foundation.yml"
+  pull_request:
+    paths:
+      - "supabase/**"
+      - "mobile/src/lib/**"
+      - "mobile/package.json"
+      - "mobile/.env.example"
+      - ".github/workflows/security-foundation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  database-security-tests:
+    name: Supabase migrations and RLS tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Start local Supabase services
+        run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector
+      - name: Validate migration SQL
+        run: supabase db lint --local
+      - name: Run database tests
+        run: supabase test db
