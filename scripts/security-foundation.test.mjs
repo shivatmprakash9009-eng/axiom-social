@@ -81,3 +81,11 @@ test('composer draft persistence never stores temporary media URIs or claims to 
   assert.match(composer, /saveLocalDraft/);
   assert.match(composer, /Media itself is not copied, uploaded, or published/);
 });
+
+test('configured account settings expose a confirmed sign-out action', () => {
+  const settings = readFileSync(new URL('../mobile/app/settings.tsx', import.meta.url), 'utf8');
+  assert.match(settings, /import \{ signOut \} from "@\/lib\/auth"/);
+  assert.match(settings, /confirmSignOut/);
+  assert.match(settings, /Sign out securely/);
+  assert.match(settings, /authConfigured \?/);
+});
