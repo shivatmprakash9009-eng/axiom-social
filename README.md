@@ -6,7 +6,7 @@ AXIOM Social is designed to help users connect eligible social accounts, plan co
 
 ## Download the Android app
 
-### [Download the latest AXIOM Social APK](https://github.com/shivatmprakash9009-eng/axiom-social/releases/download/mobile-apk/axiom-social-debug.apk)
+### [Download the latest AXIOM Social APK](https://github.com/shivatmprakash9009-eng/axiom-social/releases/download/mobile-apk/axiom-social.apk)
 
 The link points to the APK published by the Android build workflow. If a build has not completed successfully yet, open [Latest Android Preview Release](https://github.com/shivatmprakash9009-eng/axiom-social/releases/tag/mobile-apk) and check the release assets.
 
@@ -61,7 +61,7 @@ npx expo install --check
 npx expo start
 ```
 
-The GitHub Actions workflow generates the native Android project, builds an installable debug APK, and publishes it to the stable preview-release link above when the workflow succeeds. You can also download the workflow artifact from the [Actions tab](https://github.com/shivatmprakash9009-eng/axiom-social/actions).
+The GitHub Actions workflow generates the native Android project, builds an installable release APK, and publishes it to the stable preview-release link above when the workflow succeeds. You can also download the workflow artifact from the [Actions tab](https://github.com/shivatmprakash9009-eng/axiom-social/actions).
 
 ## Current status
 
