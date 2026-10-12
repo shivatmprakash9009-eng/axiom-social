@@ -89,3 +89,38 @@ test('configured account settings expose a confirmed sign-out action', () => {
   assert.match(settings, /Sign out securely/);
   assert.match(settings, /authConfigured \?/);
 });
+
+test('frontend screen suite contains every primary drawer destination', () => {
+  const routes = [
+    '../mobile/app/drawer.tsx',
+    '../mobile/app/media.tsx',
+    '../mobile/app/templates.tsx',
+    '../mobile/app/automation.tsx',
+    '../mobile/app/approvals.tsx',
+    '../mobile/app/team.tsx',
+    '../mobile/app/workspace.tsx',
+    '../mobile/app/profile.tsx',
+    '../mobile/app/notifications.tsx',
+    '../mobile/app/search.tsx',
+    '../mobile/app/editor.tsx',
+  ];
+  for (const route of routes) {
+    const source = readFileSync(new URL(route, import.meta.url), 'utf8');
+    assert.ok(source.length > 1000, `${route} should contain a real screen, not an empty placeholder`);
+    assert.match(source, /export default function/);
+  }
+});
+
+test('preview controls clearly avoid claiming to execute real publishing or automations', () => {
+  const automation = readFileSync(new URL('../mobile/app/automation.tsx', import.meta.url), 'utf8');
+  const approvals = readFileSync(new URL('../mobile/app/approvals.tsx', import.meta.url), 'utf8');
+  assert.match(automation, /local UI state only/);
+  assert.match(approvals, /does not publish/);
+});
+
+test('global header exposes search, notification and drawer navigation', () => {
+  const header = readFileSync(new URL('../mobile/src/components/ScreenHeader.tsx', import.meta.url), 'utf8');
+  assert.match(header, /Search AXIOM/);
+  assert.match(header, /Notifications/);
+  assert.match(header, /Open navigation drawer/);
+});
