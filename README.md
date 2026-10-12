@@ -63,6 +63,10 @@ npx expo start
 
 The GitHub Actions workflow generates the native Android project, builds an installable release APK, and publishes it to the stable preview-release link above when the workflow succeeds. You can also download the workflow artifact from the [Actions tab](https://github.com/shivatmprakash9009-eng/axiom-social/actions).
 
+## Production planning
+
+The verified codebase gap analysis, recommended architecture, provider API feasibility matrix, security plan, implementation milestones, and release acceptance criteria are documented in [Production Readiness Audit](docs/production-readiness-audit.md). This is a documentation-only audit; it does not mean any backend or provider integration is implemented or live.
+
 ## Current status
 
 **Mobile scaffold in progress.** The repository contains the UI foundation, local media composer, settings screens, architecture documentation, acceptance criteria, and APK build workflow. Social OAuth, AI provider wiring, persistent backend, real publishing, and analytics are not yet active.
