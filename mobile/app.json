@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "AXIOM Social",
+    "slug": "axiom-social",
+    "scheme": "axiomsocial",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow AXIOM Social to select media for your social posts.",
+          "cameraPermission": "Allow AXIOM Social to capture media for your social posts."
+        }
+      ]
+    ],
+    "experiments": { "typedRoutes": true },
+    "ios": { "supportsTablet": true, "bundleIdentifier": "com.axiom.social" },
+    "android": { "package": "com.axiom.social", "edgeToEdgeEnabled": true }
+  }
+}
