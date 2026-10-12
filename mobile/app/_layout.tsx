@@ -4,12 +4,14 @@ import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { colors } from "@/theme/tokens";
+import { AuthGate } from "@/auth/AuthGate";
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.canvas }}>
       <SafeAreaProvider>
         <StatusBar style="light" />
+        <AuthGate>
         <Stack
           screenOptions={{
             headerShown: false,
@@ -19,10 +21,12 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" />
+          <Stack.Screen name="auth" options={{ gestureEnabled: false }} />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="compose" options={{ presentation: "modal", animation: "slide_from_bottom", gestureEnabled: true }} />
           <Stack.Screen name="settings" options={{ animation: "slide_from_right" }} />
         </Stack>
+        </AuthGate>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
