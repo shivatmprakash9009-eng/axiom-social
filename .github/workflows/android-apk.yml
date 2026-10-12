@@ -76,15 +76,7 @@ jobs:
           retention-days: 30
 
       - name: Publish latest preview APK
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: mobile-apk
-          name: AXIOM Social — Latest Android Preview
-          body: |
-            Installable Android release APK built from the latest successful main-branch workflow. JavaScript is bundled into the APK, so Metro is not required.
-
-            This is a development preview of the current AXIOM Social mobile scaffold. Social account OAuth, AI backend, persistent storage, scheduling, and live publishing are not yet implemented. This APK is not a production release.
-          prerelease: true
-          make_latest: false
-          files: release-apk/axiom-social.apk
-          overwrite_files: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload mobile-apk release-apk/axiom-social.apk --clobber
