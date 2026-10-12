@@ -1,0 +1,42 @@
+name: Mobile checks
+
+on:
+  push:
+    paths:
+      - "mobile/**"
+      - ".github/workflows/mobile-check.yml"
+  pull_request:
+    paths:
+      - "mobile/**"
+      - ".github/workflows/mobile-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-mobile:
+    name: Verify Expo mobile scaffold
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.4"
+          cache: npm
+          cache-dependency-path: mobile/package.json
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Check Expo-compatible dependency versions
+        run: npx expo install --check
+
+      - name: TypeScript check
+        run: npm run typecheck
