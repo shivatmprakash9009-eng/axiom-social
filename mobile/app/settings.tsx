@@ -9,6 +9,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { StatusPill } from "@/components/StatusPill";
 import { Surface } from "@/components/Surface";
 import { colors } from "@/theme/tokens";
+import { signOut } from "@/lib/auth";
 
 function Connection({ platform, subtitle }: { platform: "instagram" | "youtube"; subtitle: string }) {
   const name = platform === "instagram" ? "Instagram" : "YouTube";
@@ -16,7 +17,7 @@ function Connection({ platform, subtitle }: { platform: "instagram" | "youtube";
     <Surface style={styles.connection}>
       <PlatformMark platform={platform} size={43} />
       <View style={styles.connectionCopy}><Text style={styles.connectionTitle}>{name}</Text><Text style={styles.connectionSub}>{subtitle}</Text><StatusPill label="Not connected" tone="neutral" /></View>
-      <Pressable accessibilityRole="button" onPress={() => Alert.alert("Connection not configured", `The secure ${name} OAuth flow and backend token storage are not connected in this scaffold.`)} style={styles.connectButton}><Text style={styles.connectText}>Connect</Text><Ionicons name="arrow-up-right" size={14} color={colors.gold} /></Pressable>
+      <Pressable accessibilityRole="button" onPress={() => Alert.alert("Connection not configured", `The secure ${name} OAuth flow and backend token storage are not connected in this scaffold.`)} style={styles.connectButton}><Text style={styles.connectText}>Connect</Text><Ionicons name="open-outline" size={14} color={colors.gold} /></Pressable>
     </Surface>
   );
 }
@@ -29,6 +30,11 @@ export default function SettingsScreen() {
   const [draftAuto, setDraftAuto] = useState(true);
   const [approvalBeforePublish, setApprovalBeforePublish] = useState(true);
   const [replyAssist, setReplyAssist] = useState(false);
+  const authConfigured = Boolean(process.env.EXPO_PUBLIC_SUPABASE_URL?.trim() && process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim());
+  const confirmSignOut = () => Alert.alert("Sign out of AXIOM?", "Your saved local drafts remain on this device. You will need to sign in again to access your account workspace.", [
+    { text: "Cancel", style: "cancel" },
+    { text: "Sign out", style: "destructive", onPress: () => { void signOut().catch(() => Alert.alert("Could not sign out", "Please try again.")); } },
+  ]);
   return (
     <Screen>
       <View style={styles.topline}><Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.back}><Ionicons name="chevron-back" size={17} color={colors.text} /><Text style={styles.backText}>Back</Text></Pressable><StatusPill label="WORKSPACE" tone="gold" /></View>
@@ -55,6 +61,10 @@ export default function SettingsScreen() {
         <Surface style={styles.safeguard}><Ionicons name="lock-closed-outline" size={19} color={colors.gold} /><View style={styles.safeguardCopy}><Text style={styles.safeguardTitle}>Credentials stay server-side</Text><Text style={styles.safeguardSub}>Social access tokens and provider secrets will never be stored in the mobile bundle.</Text></View></Surface>
         <Surface style={styles.safeguard}><Ionicons name="receipt-outline" size={19} color={colors.gold} /><View style={styles.safeguardCopy}><Text style={styles.safeguardTitle}>Action history</Text><Text style={styles.safeguardSub}>Production runs will record approval, execution status, result and safe error details.</Text></View></Surface>
       </View>
+      {authConfigured ? <View style={styles.section}>
+        <SectionHeading title="Account" eyebrow="Session controls" />
+        <Pressable accessibilityRole="button" onPress={confirmSignOut} style={styles.signOutButton}><Ionicons name="log-out-outline" size={17} color={colors.danger} /><Text style={styles.signOutText}>Sign out securely</Text></Pressable>
+      </View> : null}
     </Screen>
   );
 }
@@ -80,4 +90,6 @@ const styles = StyleSheet.create({
   safeguardCopy: { flex: 1, gap: 4 },
   safeguardTitle: { color: colors.text, fontSize: 12, fontWeight: "600" },
   safeguardSub: { color: colors.textMuted, fontSize: 10, lineHeight: 16 },
+  signOutButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, padding: 14, borderRadius: 13, borderWidth: 1, borderColor: "rgba(229,139,139,0.25)", backgroundColor: "rgba(229,139,139,0.06)" },
+  signOutText: { color: colors.danger, fontSize: 12, fontWeight: "700" },
 });

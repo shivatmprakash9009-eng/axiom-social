@@ -44,7 +44,7 @@ export default function AssistantScreen() {
                     <Surface style={styles.suggestion}>
                       <View style={styles.suggestionIcon}><Ionicons name={item.icon} size={18} color={colors.gold} /></View>
                       <View style={styles.suggestionCopy}><Text style={styles.suggestionTitle}>{item.title}</Text><Text style={styles.suggestionBody}>{item.body}</Text></View>
-                      <Ionicons name="arrow-up-left" size={16} color={colors.textMuted} />
+                      <Ionicons name="arrow-up" size={16} color={colors.textMuted} />
                     </Surface>
                   </Pressable>
                 </Animated.View>

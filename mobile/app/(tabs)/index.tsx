@@ -17,11 +17,11 @@ const activity = [
 ];
 
 function Metric({ label, value, detail, icon }: { label: string; value: string; detail: string; icon: keyof typeof Ionicons.glyphMap }) {
-  return <Surface style={styles.metric}><View style={styles.metricTop}><View style={styles.metricIcon}><Ionicons name={icon} size={16} color={colors.gold} /></View><Ionicons name="arrow-up-right" size={15} color={colors.textMuted} /></View><Text style={styles.metricValue}>{value}</Text><Text style={styles.metricLabel}>{label}</Text><Text style={styles.metricDetail}>{detail}</Text></Surface>;
+  return <Surface style={styles.metric}><View style={styles.metricTop}><View style={styles.metricIcon}><Ionicons name={icon} size={16} color={colors.gold} /></View><Ionicons name="open-outline" size={15} color={colors.textMuted} /></View><Text style={styles.metricValue}>{value}</Text><Text style={styles.metricLabel}>{label}</Text><Text style={styles.metricDetail}>{detail}</Text></Surface>;
 }
 
 function ConnectAction({ onPress }: { onPress: () => void }) {
-  return <Pressable accessibilityRole="button" onPress={onPress} style={styles.connectChip}><Text style={styles.connectText}>Connect</Text><Ionicons name="arrow-up-right" size={13} color={colors.gold} /></Pressable>;
+  return <Pressable accessibilityRole="button" onPress={onPress} style={styles.connectChip}><Text style={styles.connectText}>Connect</Text><Ionicons name="open-outline" size={13} color={colors.gold} /></Pressable>;
 }
 
 export default function HomeScreen() {
