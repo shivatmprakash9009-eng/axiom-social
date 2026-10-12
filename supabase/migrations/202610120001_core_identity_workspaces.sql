@@ -32,6 +32,26 @@ create table public.workspace_members (
 
 create index workspace_members_user_id_idx on public.workspace_members(user_id, workspace_id);
 
+-- Workspace creator becomes owner atomically; otherwise a newly created workspace
+-- would have no membership and be invisible under its own RLS policies.
+create or replace function public.add_workspace_creator_as_owner()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $
+begin
+  insert into public.workspace_members (workspace_id, user_id, role)
+  values (new.id, new.created_by, 'owner')
+  on conflict (workspace_id, user_id) do nothing;
+  return new;
+end;
+$;
+
+create trigger workspaces_add_creator_as_owner
+  after insert on public.workspaces
+  for each row execute procedure public.add_workspace_creator_as_owner();
+
 create or replace function public.is_workspace_member(target_workspace_id uuid)
 returns boolean
 language sql
@@ -131,7 +151,7 @@ grant select, insert, update, delete on public.workspaces to authenticated;
 grant select on public.workspace_members to authenticated;
 grant execute on function public.is_workspace_member(uuid) to authenticated;
 grant execute on function public.has_workspace_role(uuid, public.workspace_role[]) to authenticated;
-revoke execute on function public.handle_new_user() from public, anon, authenticated;
+revoke execute on function public.handle_new_user() from public, anon, authenticated;\nrevoke execute on function public.add_workspace_creator_as_owner() from public, anon, authenticated;
 revoke execute on function public.set_updated_at() from public, anon, authenticated;
 
 commit;
