@@ -7,6 +7,8 @@ on:
       - "mobile/src/lib/**"
       - "mobile/package.json"
       - "mobile/.env.example"
+      - "mobile/src/types/**"
+      - "scripts/**"
       - ".github/workflows/security-foundation.yml"
   pull_request:
     paths:
