@@ -9,6 +9,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { StatusPill } from "@/components/StatusPill";
 import { Surface } from "@/components/Surface";
 import { colors } from "@/theme/tokens";
+import { signOut } from "@/lib/auth";
 
 function Connection({ platform, subtitle }: { platform: "instagram" | "youtube"; subtitle: string }) {
   const name = platform === "instagram" ? "Instagram" : "YouTube";
@@ -29,6 +30,11 @@ export default function SettingsScreen() {
   const [draftAuto, setDraftAuto] = useState(true);
   const [approvalBeforePublish, setApprovalBeforePublish] = useState(true);
   const [replyAssist, setReplyAssist] = useState(false);
+  const authConfigured = Boolean(process.env.EXPO_PUBLIC_SUPABASE_URL?.trim() && process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim());
+  const confirmSignOut = () => Alert.alert("Sign out of AXIOM?", "Your saved local drafts remain on this device. You will need to sign in again to access your account workspace.", [
+    { text: "Cancel", style: "cancel" },
+    { text: "Sign out", style: "destructive", onPress: () => { void signOut().catch(() => Alert.alert("Could not sign out", "Please try again.")); } },
+  ]);
   return (
     <Screen>
       <View style={styles.topline}><Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.back}><Ionicons name="chevron-back" size={17} color={colors.text} /><Text style={styles.backText}>Back</Text></Pressable><StatusPill label="WORKSPACE" tone="gold" /></View>
@@ -79,5 +85,5 @@ const styles = StyleSheet.create({
   safeguard: { flexDirection: "row", alignItems: "flex-start", gap: 11, padding: 14 },
   safeguardCopy: { flex: 1, gap: 4 },
   safeguardTitle: { color: colors.text, fontSize: 12, fontWeight: "600" },
-  safeguardSub: { color: colors.textMuted, fontSize: 10, lineHeight: 16 },
+  safeguardSub: { color: colors.textMuted, fontSize: 10, lineHeight: 16 },\n  signOutButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, padding: 14, borderRadius: 13, borderWidth: 1, borderColor: "rgba(229,139,139,0.25)", backgroundColor: "rgba(229,139,139,0.06)" },\n  signOutText: { color: colors.danger, fontSize: 12, fontWeight: "700" },
 });
