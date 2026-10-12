@@ -67,6 +67,12 @@ The GitHub Actions workflow generates the native Android project, builds an inst
 
 The verified codebase gap analysis, recommended architecture, provider API feasibility matrix, security plan, implementation milestones, and release acceptance criteria are documented in [Production Readiness Audit](docs/production-readiness-audit.md). This is a documentation-only audit; it does not mean any backend or provider integration is implemented or live.
 
+## Secure foundation status
+
+The `feat/secure-foundation` work introduces staged Supabase migrations for profiles, workspaces, workspace memberships, content drafts and append-only audit events; row-level security policies; a secure mobile auth client scaffold; and database/security regression tests. It is not production-connected until a Supabase project is configured and migrations plus authenticated-user isolation tests pass against that project. No Instagram, YouTube, AI, publishing, or billing connector is live.
+
+Use separate Supabase projects for local development, beta/staging and production. Only the Supabase publishable key and project URL belong in the mobile environment. Service-role keys and provider secrets must stay server-side.
+
 ## Current status
 
 **Mobile scaffold in progress.** The repository contains the UI foundation, local media composer, settings screens, architecture documentation, acceptance criteria, and APK build workflow. Social OAuth, AI provider wiring, persistent backend, real publishing, and analytics are not yet active.
