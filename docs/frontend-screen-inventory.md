@@ -37,6 +37,8 @@ This branch intentionally completes the navigable mobile UI before starting back
 - All external integrations remain visibly disconnected until a later authorized implementation.
 
 ## Frontend acceptance checklist
+
+Merge gate: do not merge until a fresh CI run on the current head passes; prior failed runs are not evidence for later commits.
 - [ ] Mobile TypeScript check passes on this branch.
 - [ ] Expo dependency compatibility check passes.
 - [ ] Regression tests pass.
