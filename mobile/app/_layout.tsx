@@ -18,8 +18,10 @@ export default function RootLayout() {
             animationDuration: 220,
           }}
         >
+          <Stack.Screen name="index" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="compose" options={{ presentation: "modal", animation: "slide_from_bottom", gestureEnabled: true }} />
+          <Stack.Screen name="settings" options={{ animation: "slide_from_right" }} />
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>
