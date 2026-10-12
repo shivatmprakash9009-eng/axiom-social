@@ -121,7 +121,8 @@ export default function ComposeScreen() {
           </Surface>
         </View>
 
-        {saved ? <View style={styles.saved}><Ionicons name="checkmark-circle" size={15} color={colors.success} /><Text style={styles.savedText}>Saved on this device.</Text></View> : null}\n        {latestDraft ? <Pressable accessibilityRole="button" onPress={restoreLatestDraft} style={styles.restoreDraft}><Ionicons name="refresh-outline" size={14} color={colors.gold} /><Text style={styles.restoreDraftText}>Restore latest saved draft</Text><Text style={styles.restoreDraftDate}>{new Date(latestDraft.updatedAt).toLocaleDateString()}</Text></Pressable> : null}
+        {saved ? <View style={styles.saved}><Ionicons name="checkmark-circle" size={15} color={colors.success} /><Text style={styles.savedText}>Saved on this device.</Text></View> : null}
+        {latestDraft ? <Pressable accessibilityRole="button" onPress={restoreLatestDraft} style={styles.restoreDraft}><Ionicons name="refresh-outline" size={14} color={colors.gold} /><Text style={styles.restoreDraftText}>Restore latest saved draft</Text><Text style={styles.restoreDraftDate}>{new Date(latestDraft.updatedAt).toLocaleDateString()}</Text></Pressable> : null}
         <View style={styles.actions}><View style={{ flex: 1 }}><ActionButton label={saving ? "Saving…" : "Save draft"} variant="secondary" onPress={saveDraft}><Ionicons name="bookmark-outline" size={16} color={colors.text} /></ActionButton></View><View style={{ flex: 1 }}><ActionButton label="Continue" onPress={showPublishBoundary}><Ionicons name="arrow-forward" size={16} color={colors.canvas} /></ActionButton></View></View>
         <Text style={styles.footer}>No content is uploaded to a social platform from this prototype. Publishing unlocks only after account permissions and a secure backend are configured.</Text>
       </Animated.View>
@@ -171,7 +172,10 @@ const styles = StyleSheet.create({
   validationText: { flex: 1, color: colors.textSecondary, fontSize: 11 },
   validationState: { color: colors.textMuted, fontSize: 10 },
   saved: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 10 },
-  savedText: { color: colors.success, fontSize: 11 },\n  restoreDraft: { flexDirection: "row", alignItems: "center", gap: 7, paddingVertical: 10, paddingHorizontal: 12, borderRadius: radius.control, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },\n  restoreDraftText: { flex: 1, color: colors.textSecondary, fontSize: 11, fontWeight: "600" },\n  restoreDraftDate: { color: colors.textMuted, fontSize: 10 },
+  savedText: { color: colors.success, fontSize: 11 },
+  restoreDraft: { flexDirection: "row", alignItems: "center", gap: 7, paddingVertical: 10, paddingHorizontal: 12, borderRadius: radius.control, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
+  restoreDraftText: { flex: 1, color: colors.textSecondary, fontSize: 11, fontWeight: "600" },
+  restoreDraftDate: { color: colors.textMuted, fontSize: 10 },
   actions: { flexDirection: "row", alignItems: "center", gap: 10 },
   footer: { color: colors.textMuted, textAlign: "center", fontSize: 10, lineHeight: 16, marginTop: 3 },
 });
