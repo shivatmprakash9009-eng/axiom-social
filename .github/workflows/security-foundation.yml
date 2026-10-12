@@ -31,6 +31,8 @@ jobs:
           version: latest
       - name: Start local Supabase services
         run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector
+      - name: Run static security regression tests
+        run: node --test scripts/security-foundation.test.mjs
       - name: Validate migration SQL
         run: supabase db lint --local
       - name: Run database tests
