@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { router } from "expo-router";
 import { ActionButton } from "@/components/ActionButton";
@@ -13,8 +13,7 @@ const suggestions = [
   { icon: "videocam-outline" as const, title: "Create a short", body: "Turn an idea into a video brief" },
   { icon: "chatbubble-ellipses-outline" as const, title: "Reply with care", body: "Draft thoughtful audience replies" },
 ];
-
-type Message = { id: number; role: "user" | "assistant"; text: string };
+type Message = { id: number; role: "user"; text: string };
 
 export default function AssistantScreen() {
   const [prompt, setPrompt] = useState("");
@@ -25,8 +24,9 @@ export default function AssistantScreen() {
     if (!clean) return;
     setMessages(previous => [...previous, { id: Date.now(), role: "user", text: clean }]);
     setPrompt("");
-    setNotice("Local interaction preview. AI planning and tool execution will activate after the secure backend is connected.");
+    setNotice("Prototype mode: your request is shown locally. AI planning and tool execution activate after the secure backend is connected.");
   };
+
   return (
     <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={8}>
       <View style={styles.screen}>
@@ -37,40 +37,31 @@ export default function AssistantScreen() {
             <Animated.View entering={FadeInDown.duration(360)} style={styles.orbOuter}><View style={styles.orbInner}><Ionicons name="sparkles" size={28} color={colors.gold} /></View></Animated.View>
             <Text style={styles.emptyTitle}>Your social strategist.</Text>
             <Text style={styles.emptyBody}>Start with a goal, a piece of content, or a question about your channels.</Text>
-            <View style={styles.suggestions}>{suggestions.map((item, index) => (
-              <Animated.View key={item.title} entering={FadeInDown.delay(100 + index * 70).duration(280)}>
-                <Surface style={styles.suggestion}>
-                  <View style={styles.suggestionIcon}><Ionicons name={item.icon} size={18} color={colors.gold} /></View>
-                  <View style={styles.suggestionCopy}><Text style={styles.suggestionTitle}>{item.title}</Text><Text style={styles.suggestionBody}>{item.body}</Text></View>
-                  <Ionicons name="arrow-up-left" size={16} color={colors.textMuted} />
-                  <Text onPress={() => send(item.title + ": " + item.body)} style={StyleSheet.absoluteFillObject} accessibilityRole="button" accessibilityLabel={"Use suggestion " + item.title} />
-                </Surface>
-              </Animated.View>
-            ))}</View>
+            <View style={styles.suggestions}>
+              {suggestions.map((item, index) => (
+                <Animated.View key={item.title} entering={FadeInDown.delay(100 + index * 70).duration(280)}>
+                  <Pressable accessibilityRole="button" accessibilityLabel={"Use suggestion " + item.title} onPress={() => send(item.title + ": " + item.body)}>
+                    <Surface style={styles.suggestion}>
+                      <View style={styles.suggestionIcon}><Ionicons name={item.icon} size={18} color={colors.gold} /></View>
+                      <View style={styles.suggestionCopy}><Text style={styles.suggestionTitle}>{item.title}</Text><Text style={styles.suggestionBody}>{item.body}</Text></View>
+                      <Ionicons name="arrow-up-left" size={16} color={colors.textMuted} />
+                    </Surface>
+                  </Pressable>
+                </Animated.View>
+              ))}
+            </View>
           </View>
         ) : (
           <View style={styles.messages}>
-            {messages.map(message => <View key={message.id} style={[styles.bubble, message.role === "user" ? styles.userBubble : styles.assistantBubble]}><Text style={styles.bubbleText}>{message.text}</Text></View>)}
+            {messages.map(message => <View key={message.id} style={styles.userBubble}><Text style={styles.bubbleText}>{message.text}</Text></View>)}
             <Surface style={styles.previewResponse}><Ionicons name="information-circle-outline" size={17} color={colors.gold} /><Text style={styles.previewText}>{notice}</Text></Surface>
             <ActionButton label="Create a content draft" variant="secondary" onPress={() => router.push("/compose")}><Ionicons name="create-outline" size={17} color={colors.text} /></ActionButton>
           </View>
         )}
         <View style={styles.composer}>
           <View style={styles.composerTop}>
-            <TextInput
-              value={prompt}
-              onChangeText={setPrompt}
-              placeholder="Ask AXIOM to plan, create or review…"
-              placeholderTextColor={colors.textMuted}
-              multiline
-              maxLength={2000}
-              style={styles.input}
-              accessibilityLabel="Message the AXIOM assistant"
-              returnKeyType="default"
-            />
-            <View style={styles.sendWrap}>
-              <ActionButton label="" onPress={() => send()} disabled={!prompt.trim()}><Ionicons name="arrow-up" size={18} color={colors.canvas} /></ActionButton>
-            </View>
+            <TextInput value={prompt} onChangeText={setPrompt} placeholder="Ask AXIOM to plan, create or review…" placeholderTextColor={colors.textMuted} multiline maxLength={2000} style={styles.input} accessibilityLabel="Message the AXIOM assistant" returnKeyType="default" />
+            <View style={styles.sendWrap}><ActionButton label="" onPress={() => send()} disabled={!prompt.trim()}><Ionicons name="arrow-up" size={18} color={colors.canvas} /></ActionButton></View>
           </View>
           <View style={styles.composerFooter}><Ionicons name="lock-closed-outline" size={12} color={colors.textMuted} /><Text style={styles.footerText}>Secure execution is not configured yet</Text><View style={{ flex: 1 }} /><Text style={styles.counter}>{prompt.length}/2000</Text></View>
         </View>
@@ -96,9 +87,7 @@ const styles = StyleSheet.create({
   suggestionTitle: { color: colors.text, fontSize: 12, fontWeight: "600" },
   suggestionBody: { color: colors.textMuted, fontSize: 10 },
   messages: { flex: 1, gap: 12, paddingTop: 6 },
-  bubble: { padding: 13, borderRadius: radius.card, maxWidth: "88%" },
-  userBubble: { alignSelf: "flex-end", backgroundColor: "#2C281E", borderBottomRightRadius: 5 },
-  assistantBubble: { alignSelf: "flex-start", backgroundColor: colors.surfaceRaised },
+  userBubble: { alignSelf: "flex-end", backgroundColor: "#2C281E", borderBottomRightRadius: 5, padding: 13, borderRadius: radius.card, maxWidth: "88%" },
   bubbleText: { color: colors.text, fontSize: 13, lineHeight: 19 },
   previewResponse: { flexDirection: "row", alignItems: "flex-start", gap: 9 },
   previewText: { color: colors.textSecondary, fontSize: 11, flex: 1, lineHeight: 17 },
