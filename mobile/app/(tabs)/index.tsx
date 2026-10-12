@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { ActionButton } from "@/components/ActionButton";
 import { PlatformMark } from "@/components/PlatformMark";
@@ -20,29 +20,35 @@ function Metric({ label, value, detail, icon }: { label: string; value: string; 
   return <Surface style={styles.metric}><View style={styles.metricTop}><View style={styles.metricIcon}><Ionicons name={icon} size={16} color={colors.gold} /></View><Ionicons name="arrow-up-right" size={15} color={colors.textMuted} /></View><Text style={styles.metricValue}>{value}</Text><Text style={styles.metricLabel}>{label}</Text><Text style={styles.metricDetail}>{detail}</Text></Surface>;
 }
 
+function ConnectAction({ onPress }: { onPress: () => void }) {
+  return <Pressable accessibilityRole="button" onPress={onPress} style={styles.connectChip}><Text style={styles.connectText}>Connect</Text><Ionicons name="arrow-up-right" size={13} color={colors.gold} /></Pressable>;
+}
+
 export default function HomeScreen() {
+  const openSettings = () => router.push("/settings");
   return (
     <Screen>
-      <ScreenHeader title="Your social, in sync." subtitle="A clearer view of everything that needs your attention." />
+      <ScreenHeader title="Your social, in sync." subtitle="A clearer view of everything that needs your attention." onPressSettings={openSettings} />
       <Animated.View entering={FadeInDown.delay(70).duration(340)} style={styles.hero}>
         <View style={styles.heroGlow} />
         <View style={styles.heroHead}><View style={styles.liveDot} /><Text style={styles.heroEyebrow}>YOUR AI COMMAND CENTER</Text><View style={{ flex: 1 }} /><Ionicons name="sparkles" size={17} color={colors.gold} /></View>
         <Text style={styles.heroTitle}>Make room for{"\n"}your next big idea.</Text>
         <Text style={styles.heroBody}>Plan, create and manage your social presence from one calm workspace.</Text>
         <ActionButton label="Talk to your assistant" onPress={() => router.navigate("/(tabs)/assistant")}><Ionicons name="sparkles" size={17} color={colors.canvas} /></ActionButton>
+        <Pressable accessibilityRole="button" onPress={() => router.push("/compose")} style={styles.secondaryAction}><Ionicons name="add" size={16} color={colors.textSecondary} /><Text style={styles.secondaryActionText}>Create a post with your own media</Text></Pressable>
       </Animated.View>
-      <View style={styles.metrics}><Metric label="In your planner" value="08" detail="Across 2 accounts" icon="calendar-outline" /><Metric label="Needs your eye" value="02" detail="Drafts to review" icon="checkmark-circle-outline" /></View>
+      <View style={styles.metrics}><Metric label="In your planner" value="08" detail="Sample items only" icon="calendar-outline" /><Metric label="Needs your eye" value="02" detail="Sample drafts only" icon="checkmark-circle-outline" /></View>
       <View style={styles.section}>
-        <SectionHeading title="Connected accounts" eyebrow="Your channels" action="Manage" />
+        <SectionHeading title="Connected accounts" eyebrow="Your channels" action="Manage" onActionPress={openSettings} />
         <Surface style={styles.accounts}>
-          <View style={styles.accountRow}><PlatformMark platform="instagram" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>Instagram</Text><Text style={styles.accountSub}>Professional account</Text></View><StatusPill label="Connect" tone="neutral" /></View>
+          <View style={styles.accountRow}><PlatformMark platform="instagram" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>Instagram</Text><Text style={styles.accountSub}>Professional account</Text></View><ConnectAction onPress={openSettings} /></View>
           <View style={styles.rowDivider} />
-          <View style={styles.accountRow}><PlatformMark platform="youtube" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>YouTube</Text><Text style={styles.accountSub}>Channel management</Text></View><StatusPill label="Connect" tone="neutral" /></View>
-          <Text style={styles.demoNote}>Connectors are not configured yet. No account data is being accessed.</Text>
+          <View style={styles.accountRow}><PlatformMark platform="youtube" size={43} /><View style={styles.accountInfo}><Text style={styles.accountTitle}>YouTube</Text><Text style={styles.accountSub}>Channel management</Text></View><ConnectAction onPress={openSettings} /></View>
+          <Text style={styles.demoNote}>Not connected. OAuth is not configured yet; no account data is being accessed.</Text>
         </Surface>
       </View>
       <View style={styles.section}>
-        <SectionHeading title="Coming up" eyebrow="Your publishing queue" action="View planner" />
+        <SectionHeading title="Coming up" eyebrow="Your publishing queue" action="View planner" onActionPress={() => router.navigate("/(tabs)/planner")} />
         <View style={{ gap: 10 }}>{activity.map((item, index) => <Animated.View key={item.title} entering={FadeInDown.delay(120 + index * 70).duration(300)}><Surface style={styles.activity}><PlatformMark platform={item.platform} size={42} /><View style={styles.activityInfo}><Text style={styles.activityTitle}>{item.title}</Text><Text style={styles.activitySub}>{item.subtitle}</Text></View><StatusPill label={item.status} tone={item.tone} /></Surface></Animated.View>)}</View>
         <Text style={styles.demoNote}>Sample content for layout preview. These are not real scheduled posts.</Text>
       </View>
@@ -58,6 +64,8 @@ const styles = StyleSheet.create({
   heroEyebrow: { fontSize: 10, letterSpacing: 1.2, color: colors.gold, fontWeight: "800" },
   heroTitle: { color: colors.text, fontSize: 29, lineHeight: 33, letterSpacing: -1.1, fontWeight: "600", marginTop: 3 },
   heroBody: { fontSize: 13, lineHeight: 20, color: colors.textSecondary, maxWidth: 280, marginBottom: 5 },
+  secondaryAction: { flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 6, paddingVertical: 4 },
+  secondaryActionText: { fontSize: 11, color: colors.textSecondary, fontWeight: "600" },
   metrics: { flexDirection: "row", gap: 10 },
   metric: { flex: 1, gap: 5, padding: 14, minHeight: 139 },
   metricTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 4 },
@@ -71,6 +79,8 @@ const styles = StyleSheet.create({
   accountInfo: { flex: 1, gap: 3 },
   accountTitle: { color: colors.text, fontSize: 13, fontWeight: "600" },
   accountSub: { color: colors.textMuted, fontSize: 11 },
+  connectChip: { flexDirection: "row", alignItems: "center", gap: 2, paddingHorizontal: 8, paddingVertical: 7, borderRadius: 9, backgroundColor: colors.goldSoft },
+  connectText: { color: colors.gold, fontSize: 10, fontWeight: "700" },
   rowDivider: { height: 1, backgroundColor: colors.border },
   activity: { flexDirection: "row", alignItems: "center", gap: 11, padding: 12 },
   activityInfo: { flex: 1, gap: 4 },
