@@ -1,10 +1,33 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "@/theme/tokens";
-import { PressScale } from "@/components/PressScale";
+
 type Props = { label?: string; title: string; subtitle?: string; onPressSettings?: () => void };
 export function ScreenHeader({ label = "AXIOM SOCIAL", title, subtitle, onPressSettings }: Props) {
-  return <View style={styles.wrap}><View style={styles.top}><View style={styles.brand}><View style={styles.symbol}><Ionicons name="aperture" size={19} color={colors.gold} /></View><Text style={styles.brandName}>{label}</Text></View><PressScale accessibilityLabel="Open settings" onPress={onPressSettings ?? (() => {})} style={styles.settings}><Ionicons name="options-outline" size={19} color={colors.textSecondary} /></PressScale></View><View style={styles.copy}><Text style={styles.title}>{title}</Text>{subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}</View></View>;
+  const settingsControl = (
+    <View style={styles.settings}>
+      <Ionicons name="options-outline" size={19} color={colors.textSecondary} />
+    </View>
+  );
+  return (
+    <View style={styles.wrap}>
+      <View style={styles.top}>
+        <View style={styles.brand}>
+          <View style={styles.symbol}><Ionicons name="aperture" size={19} color={colors.gold} /></View>
+          <Text style={styles.brandName}>{label}</Text>
+        </View>
+        {onPressSettings ? (
+          <Pressable accessibilityRole="button" accessibilityLabel="Open settings" onPress={onPressSettings}>
+            {settingsControl}
+          </Pressable>
+        ) : settingsControl}
+      </View>
+      <View style={styles.copy}>
+        <Text style={styles.title}>{title}</Text>
+        {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+      </View>
+    </View>
+  );
 }
 const styles = StyleSheet.create({
   wrap: { gap: 27 },
