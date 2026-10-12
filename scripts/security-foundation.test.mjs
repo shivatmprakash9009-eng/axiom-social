@@ -64,3 +64,20 @@ test('migration files contain no escaped newline sequences from generated SQL ed
     assert.doesNotMatch(sql, /\\\\nrevoke execute/i, `${file} must contain real line breaks`);
   }
 });
+
+test('local drafts are scoped by authenticated user and fail closed on partial auth config', () => {
+  const drafts = readFileSync(new URL('../mobile/src/lib/localDrafts.ts', import.meta.url), 'utf8');
+  assert.match(drafts, /STORE_PREFIX \+ session\.user\.id/);
+  assert.match(drafts, /hasUrl !== hasKey/);
+  assert.match(drafts, /Sign in to access account-scoped drafts/);
+  assert.match(drafts, /MAX_DRAFTS = 100/);
+});
+
+test('composer draft persistence never stores temporary media URIs or claims to publish', () => {
+  const drafts = readFileSync(new URL('../mobile/src/lib/localDrafts.ts', import.meta.url), 'utf8');
+  const composer = readFileSync(new URL('../mobile/app/compose.tsx', import.meta.url), 'utf8');
+  assert.match(drafts, /mediaName: string \| null/);
+  assert.doesNotMatch(drafts, /mediaUri|assetUri|\.uri:/i);
+  assert.match(composer, /saveLocalDraft/);
+  assert.match(composer, /Media itself is not copied, uploaded, or published/);
+});
